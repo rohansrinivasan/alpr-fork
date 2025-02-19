@@ -1,4 +1,19 @@
-[
-    {"type": "truck", "color": "Blue"},
-    {"type": "car", "color": "Red"}
-]
+{
+    "vehicles": [
+        {
+            "color": "white",
+            "number": "3037",
+            "brand": "Volvo"
+        },
+        {
+            "color": "red", 
+            "number": "1024",
+            "brand": "Peterbilt"
+        },
+        {
+            "color": "blue",
+            "number": "4567", 
+            "brand": "Kenworth"
+        }
+    ]
+}

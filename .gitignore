@@ -171,3 +171,8 @@ cython_debug/
 .pypirc
 
 output/
+
+debug/ocr/
+debug/
+
+*.DS_Store

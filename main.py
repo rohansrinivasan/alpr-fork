@@ -15,8 +15,10 @@ from openalpr import Alpr
 # Initialize OpenALPR (for USA plates, change as needed)
 alpr = Alpr("us", "/etc/openalpr/openalpr.conf", "/usr/share/openalpr/runtime_data")
 
-from ocr.usdot_extractor import TruckInfoExtractor
-truck_info_extractor = TruckInfoExtractor()
+# from ocr.usdot_extractor import TruckInfoExtractor
+# truck_info_extractor = TruckInfoExtractor()
+
+from ocr.fast_ocr import detect_truck_number
 
 if not alpr.is_loaded():
     print("Error: OpenALPR failed to load")
@@ -37,12 +39,12 @@ def get_vehicle_data(plate_text, image_path):
     print(f"Dominant color: {dominant_color}")
 
     if DEBUG:
-        image_path = "./testimgs/test_img1.jpg"
+        image_path = "./testimgs/test_img2.jpg"
     else:
         #TODO: get image from RTSP stream
         print('Implement STREAM')
         
-    usdot_number, vin_number = truck_info_extractor.extract_info(image_path)
+    usdot_number, vin_number = None, None #truck_info_extractor.extract_info(image_path)
     print(f"Truck info: {usdot_number}, {vin_number}")
 
     if usdot_number is None:
@@ -77,47 +79,50 @@ def get_vehicle_data(plate_text, image_path):
         json.dump(test_data, json_file, indent=2)
     print(f"Output written to {json_output_path}")
 
-while total_seconds < 10:
-    # Capture frame
-    ret, frame = cap.read()
+if __name__ == "__main__":
+    allowed_vehicles = json.load(open("allowed_vehicles.json"))
+    allowed_numbers = [vehicle['number'] for vehicle in allowed_vehicles['vehicles']]
+    while total_seconds < 10:
+        # Capture frame
+        ret, frame = cap.read()
 
-    if ret:
-        # Save frame to output folder and get the path
-        output_path = "./output/current_frame.jpg"
-        cv2.imwrite(output_path, frame)
+        if ret:
+            # Save frame to output folder and get the path
+            output_path = "./output/current_frame.jpg"
+            cv2.imwrite(output_path, frame)
+
+            if DEBUG:
+                # use test image instead of current frame
+                output_path = "./testimgs/alpr_test1.jpg"
+
+            # Run ALPR directly on current frame
+            results = alpr.recognize_file(output_path)
+
+            found = False
+
+            # Check results
+            for result in results['results']:
+                plate_text = result['plate']
+                confidence = result['confidence']
+                
+                print(f"Detected Plate: {plate_text} | Confidence: {confidence:.2f}%")
+
+                result = detect_truck_number(output_path, allowed_numbers)
+                if result:
+                    found = True
+                    print(f"🚗 Vehicle found! Number: {result}")
+                    # thread = threading.Thread(target=get_vehicle_data, args=(plate_text, output_path))
+                    # thread.start()
+                    break
+            if not found:
+                print("🚗 Vehicle not in allowed list")
+
+        else:
+            print("Error: Could not read frame")
 
         if DEBUG:
-            # use test image instead of current frame
-            output_path = "./testimgs/alpr_test1.jpg"
-
-        # Run ALPR directly on current frame
-        results = alpr.recognize_file(output_path)
-
-        confidence = 0
-        plate_text = ""
-
-        # Check results
-        for result in results['results']:
-            plate_text = result['plate']
-            confidence = result['confidence']
-            
-            print(f"Detected Plate: {plate_text} | Confidence: {confidence:.2f}%")
-
-            if confidence >= 80:
-                print("🚗 Vehicle found!")
-                thread = threading.Thread(target=get_vehicle_data, args=(plate_text, output_path))
-                thread.start()
-                break
-        
-        if confidence < 80:
-            print("🚗 Vehicle not found!")
-
-    else:
-        print("Error: Could not read frame")
-
-    if DEBUG:
-        total_seconds += 1
-    time.sleep(1)  # Wait for 1 seconds before capturing the next frame
+            total_seconds += 1
+        time.sleep(1)  # Wait for 1 seconds before capturing the next frame
 
 # Release resources
 cap.release()

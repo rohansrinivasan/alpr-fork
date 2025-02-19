@@ -7,7 +7,7 @@ import numpy as np
 ocr = PaddleOCR(lang='en')
 
 # Using PIL
-image = Image.open('./testimgs/test_img1.jpg').convert('RGB')
+image = Image.open('./testimgs/test_img2.jpg').convert('RGB')
 image_np = np.array(image)
 
 dummy_image = np.random.randint(0, 256, (640, 640, 3), dtype=np.uint8)
