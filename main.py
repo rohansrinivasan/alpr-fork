@@ -6,6 +6,7 @@ import random
 import datetime
 import threading
 import os
+import subprocess
 DEBUG = True
 
 # RTSP stream URL
@@ -124,7 +125,9 @@ if __name__ == "__main__":
                     found = True
                     print(f"🚗 Vehicle found! Number: {result}")
                     # open door
-                    os.system(DOOR_OPEN_SCRIPT)
+                    output = subprocess.check_output(DOOR_OPEN_SCRIPT, shell=True)
+                    with open("debug/door_open.log", "a") as f:
+                        f.write(f"\n[{time.strftime('%Y-%m-%d %H:%M:%S')}] {output.decode()}")
                     thread = threading.Thread(target=get_vehicle_data, args=(plate_text, output_path))
                     thread.start()
                     break
