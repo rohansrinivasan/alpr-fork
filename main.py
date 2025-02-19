@@ -5,11 +5,13 @@ import json
 import random
 import datetime
 import threading
-
+import os
 DEBUG = True
 
 # RTSP stream URL
 rtsp_url = "rtsp://admin:admin123@192.168.1.16:554/cam/realmonitor?channel=1&subtype=0"
+
+DOOR_OPEN_SCRIPT = "./scripts/gpio_toggle.sh"
 
 from openalpr import Alpr
 # Initialize OpenALPR (for USA plates, change as needed)
@@ -118,6 +120,8 @@ if __name__ == "__main__":
                 if result:
                     found = True
                     print(f"🚗 Vehicle found! Number: {result}")
+                    # open door
+                    os.system(DOOR_OPEN_SCRIPT)
                     # thread = threading.Thread(target=get_vehicle_data, args=(plate_text, output_path))
                     # thread.start()
                     break
