@@ -84,6 +84,11 @@ def get_vehicle_data(plate_text, image_path):
 if __name__ == "__main__":
     allowed_vehicles = json.load(open("allowed_vehicles.json"))
     allowed_numbers = [vehicle['number'] for vehicle in allowed_vehicles['vehicles']]
+
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print("🚗 Starting vehicle detection...")
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n")
+
     while total_seconds < 10:
         # Capture frame
         ret, frame = cap.read()
