@@ -6,8 +6,11 @@ import json
 import random
 import datetime
 import threading
+from ocr.usdot_extractor import TruckInfoExtractor
 
 DEBUG = True
+
+truck_info_extractor = TruckInfoExtractor()
 
 # RTSP stream URL
 rtsp_url = "rtsp://admin:admin123@192.168.1.16:554/cam/realmonitor?channel=1&subtype=0"
@@ -33,6 +36,15 @@ def get_vehicle_data(plate_text, image_path):
     dominant_color = get_dominant_color(image_path)
     print(f"Dominant color: {dominant_color}")
 
+    usdot_number, vin_number = truck_info_extractor.extract_info(image_path)
+    print(f"Truck info: {usdot_number}, {vin_number}")
+
+    if usdot_number is None:
+        usdot_number = "N/A"
+
+    if vin_number is None:
+        vin_number = "N/A"
+
     # Generate test JSON data
     timestamp = datetime.datetime.now().isoformat()
     test_data = [
@@ -44,8 +56,8 @@ def get_vehicle_data(plate_text, image_path):
             },
             "vehicle_data": {
                 "plate_no": plate_text,
-                "usdot": str(random.randint(1000000, 9999999)),
-                "vin": f"VIN{random.randint(100000, 999999)}",
+                "usdot": usdot_number,
+                "vin": vin_number,
                 "truck_color": dominant_color,
                 "trailers": [f"TRAILER{random.randint(100, 999)}" for _ in range(random.randint(0, 2))]
             },
