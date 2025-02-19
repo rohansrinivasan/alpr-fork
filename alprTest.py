@@ -1,7 +1,7 @@
 from openalpr import Alpr
 
 # Path to your test image
-image_path = "/home/kfsjetson/code/alpr/testimgs/alpr_test1.jpg"
+image_path = "./testimgs/alpr_test1.jpg"
 
 # Initialize OpenALPR (Change "us" to your country code if needed)
 alpr = Alpr("us", "/etc/openalpr/openalpr.conf", "/usr/share/openalpr/runtime_data")

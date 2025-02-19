@@ -70,7 +70,7 @@ while total_seconds < 10:
 
         if DEBUG:
             # use test image instead of current frame
-            output_path = "./testimgs/test_img1.jpg"
+            output_path = "./testimgs/alpr_test1.jpg"
 
         # Run ALPR directly on current frame
         results = alpr.recognize_file(output_path)
