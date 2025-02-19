@@ -107,6 +107,13 @@ if __name__ == "__main__":
                 
                 print(f"Detected Plate: {plate_text} | Confidence: {confidence:.2f}%")
 
+                if DEBUG:
+                    output_path = "./testimgs/test_img2.jpg"
+                else:
+                    #TODO: get image from RTSP stream
+                    print('Implement STREAM')
+                    output_path = "./output/current_frame.jpg"
+
                 result = detect_truck_number(output_path, allowed_numbers)
                 if result:
                     found = True
