@@ -1,22 +1,22 @@
 import cv2
 import time
-from openalpr import Alpr
 from color_detection import get_dominant_color
 import json
 import random
 import datetime
 import threading
-from ocr.usdot_extractor import TruckInfoExtractor
 
 DEBUG = True
-
-truck_info_extractor = TruckInfoExtractor()
 
 # RTSP stream URL
 rtsp_url = "rtsp://admin:admin123@192.168.1.16:554/cam/realmonitor?channel=1&subtype=0"
 
+from openalpr import Alpr
 # Initialize OpenALPR (for USA plates, change as needed)
 alpr = Alpr("us", "/etc/openalpr/openalpr.conf", "/usr/share/openalpr/runtime_data")
+
+from ocr.usdot_extractor import TruckInfoExtractor
+truck_info_extractor = TruckInfoExtractor()
 
 if not alpr.is_loaded():
     print("Error: OpenALPR failed to load")
@@ -40,6 +40,7 @@ def get_vehicle_data(plate_text, image_path):
         image_path = "./testimgs/test_img1.jpg"
     else:
         #TODO: get image from RTSP stream
+        print('Implement STREAM')
         
     usdot_number, vin_number = truck_info_extractor.extract_info(image_path)
     print(f"Truck info: {usdot_number}, {vin_number}")
