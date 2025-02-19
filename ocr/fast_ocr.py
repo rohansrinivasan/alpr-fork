@@ -31,10 +31,14 @@ def preprocess_image(image_path, scale_down=1.0):
 
     return cleaned
 
-def detect_truck_number(img_path, allowed_numbers):
-    # 3. Run OCR
+def run_ocr(img_path):
     processed_image = preprocess_image(img_path)
     result = ocr.ocr(processed_image)
+    return result
+
+def detect_truck_number(img_path, allowed_numbers):
+    # 3. Run OCR
+    result = run_ocr(img_path)
 
     # Process OCR results
     if not result or len(result) == 0:

@@ -1,7 +1,8 @@
-from paddleocr import PaddleOCR
 import re
 import numpy as np
 import cv2
+
+from ocr.fast_ocr import run_ocr
 
 def preprocess_image(image_path, resize_width=None):
     """
@@ -43,13 +44,6 @@ class TruckInfoExtractor:
             use_gpu (bool): Whether to use GPU acceleration
             cpu_threads (int): Number of CPU threads to use
         """
-        # Initialize PaddleOCR with optimized settings for Jetson
-        self.ocr = PaddleOCR(
-            use_angle_cls=False,  # Disable angle detection if text is usually horizontal
-            lang='en',
-            use_gpu=use_gpu,
-            cpu_threads=cpu_threads
-        )
     
     def extract_info(self, image_path, resize_width=None):
         """
@@ -71,7 +65,7 @@ class TruckInfoExtractor:
         
         # Perform OCR on the preprocessed image
         try:
-            result = self.ocr.ocr(img, cls=False)  # Disable classifier for speed
+            result = run_ocr(img)
             
             if result and len(result) > 0:
                 # Convert results to a list of text strings

@@ -17,10 +17,9 @@ from openalpr import Alpr
 # Initialize OpenALPR (for USA plates, change as needed)
 alpr = Alpr("us", "/etc/openalpr/openalpr.conf", "/usr/share/openalpr/runtime_data")
 
-# from ocr.usdot_extractor import TruckInfoExtractor
-# truck_info_extractor = TruckInfoExtractor()
-
 from ocr.fast_ocr import detect_truck_number
+from ocr.usdot_extractor import TruckInfoExtractor
+truck_info_extractor = TruckInfoExtractor()
 
 if not alpr.is_loaded():
     print("Error: OpenALPR failed to load")
@@ -33,8 +32,6 @@ if not cap.isOpened():
     print("Error: Could not open RTSP stream")
     exit()
 
-total_seconds = 0
-
 def get_vehicle_data(plate_text, image_path):
     # get dominant color
     dominant_color = get_dominant_color(image_path)
@@ -46,7 +43,7 @@ def get_vehicle_data(plate_text, image_path):
         #TODO: get image from RTSP stream
         print('Implement STREAM')
         
-    usdot_number, vin_number = None, None #truck_info_extractor.extract_info(image_path)
+    usdot_number, vin_number = truck_info_extractor.extract_info(image_path)
     print(f"Truck info: {usdot_number}, {vin_number}")
 
     if usdot_number is None:
@@ -89,7 +86,8 @@ if __name__ == "__main__":
     print("🚗 Starting vehicle detection...")
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n")
 
-    while total_seconds < 10:
+    ticks = 0
+    while ticks < 10:
         # Capture frame
         ret, frame = cap.read()
 
@@ -127,8 +125,8 @@ if __name__ == "__main__":
                     print(f"🚗 Vehicle found! Number: {result}")
                     # open door
                     os.system(DOOR_OPEN_SCRIPT)
-                    # thread = threading.Thread(target=get_vehicle_data, args=(plate_text, output_path))
-                    # thread.start()
+                    thread = threading.Thread(target=get_vehicle_data, args=(plate_text, output_path))
+                    thread.start()
                     break
             if not found:
                 print("🚗 Vehicle not in allowed list")
@@ -137,8 +135,8 @@ if __name__ == "__main__":
             print("Error: Could not read frame")
 
         if DEBUG:
-            total_seconds += 1
-        time.sleep(1)  # Wait for 1 seconds before capturing the next frame
+            ticks += 1
+        time.sleep(0.5)  # Wait for 0.5 seconds before capturing the next frame
 
 # Release resources
 cap.release()
