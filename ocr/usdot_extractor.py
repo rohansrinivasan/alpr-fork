@@ -57,7 +57,7 @@ class TruckInfoExtractor:
             tuple: (usdot_number, vin_number) - Both could be None if not found
         """
         # Preprocess the image
-        img = preprocess_image(image_path, resize_width)
+        # img = preprocess_image(image_path, resize_width)
         
         # Initialize return values
         usdot_number = None
@@ -65,7 +65,7 @@ class TruckInfoExtractor:
         
         # Perform OCR on the preprocessed image
         try:
-            result = run_ocr(img)
+            result = run_ocr(image_path)
             
             if result and len(result) > 0:
                 # Convert results to a list of text strings

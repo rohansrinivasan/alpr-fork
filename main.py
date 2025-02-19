@@ -39,7 +39,7 @@ def get_vehicle_data(plate_text, image_path):
     print(f"Dominant color: {dominant_color}")
 
     if DEBUG:
-        image_path = "./testimgs/test_img2.jpg"
+        image_path = "./testimgs/test_img1.jpg"
     else:
         #TODO: get image from RTSP stream
         print('Implement STREAM')
@@ -83,9 +83,11 @@ if __name__ == "__main__":
     allowed_vehicles = json.load(open("allowed_vehicles.json"))
     allowed_numbers = [vehicle['number'] for vehicle in allowed_vehicles['vehicles']]
 
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print("🚗 Starting vehicle detection...")
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n")
+    print("\n\n")
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print("🚗🚗 Starting vehicle detection...")
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print("\n")
 
     ticks = 0
     while ticks < 10:
@@ -125,9 +127,9 @@ if __name__ == "__main__":
                     found = True
                     print(f"🚗 Vehicle found! Number: {result}")
                     # open door
-                    output = subprocess.check_output(DOOR_OPEN_SCRIPT, shell=True)
-                    with open("debug/door_open.log", "a") as f:
-                        f.write(f"\n[{time.strftime('%Y-%m-%d %H:%M:%S')}] {output.decode()}")
+                    # output = subprocess.check_output(DOOR_OPEN_SCRIPT, shell=True)
+                    # with open("debug/door_open.log", "a") as f:
+                    #     f.write(f"\n[{time.strftime('%Y-%m-%d %H:%M:%S')}] {output.decode()}")
                     thread = threading.Thread(target=get_vehicle_data, args=(plate_text, output_path))
                     thread.start()
                     break
