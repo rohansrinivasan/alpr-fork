@@ -36,6 +36,11 @@ def get_vehicle_data(plate_text, image_path):
     dominant_color = get_dominant_color(image_path)
     print(f"Dominant color: {dominant_color}")
 
+    if DEBUG:
+        image_path = "./testimgs/test_img1.jpg"
+    else:
+        #TODO: get image from RTSP stream
+        
     usdot_number, vin_number = truck_info_extractor.extract_info(image_path)
     print(f"Truck info: {usdot_number}, {vin_number}")
 
