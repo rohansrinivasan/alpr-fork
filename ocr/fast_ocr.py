@@ -31,10 +31,20 @@ def preprocess_image(image_path, scale_down=1.0):
 
     return cleaned
 
-def run_ocr(img_path):
-    processed_image = preprocess_image(img_path)
+def run_ocr(img_path, scale_down=1.0):
+    processed_image = preprocess_image(img_path, scale_down)
     result = ocr.ocr(processed_image)
     return result
+
+def detect_text(img_path):
+    # Run OCR with aggressive downscaling (0.5 = 1/4 of original size as we are scaling in both dimensions 0.5 * 0.5 = 1/4)
+    # This is sufficient for just detecting presence of text
+    result = run_ocr(img_path, scale_down=0.5)
+    
+    # Check if any text was detected
+    if result and len(result) > 0 and result[0] and len(result[0]) > 0:
+        return True
+    return False
 
 def detect_truck_number(img_path, allowed_numbers):
     # 3. Run OCR

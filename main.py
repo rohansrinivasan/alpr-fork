@@ -10,8 +10,7 @@ import numpy as np  # Add this import
 from collections import deque
 
 from color_detection import get_dominant_color
-from ocr.fast_ocr import detect_truck_number
-from ocr.text_detection import detect_text
+from ocr.fast_ocr import detect_truck_number, detect_text
 from ocr.usdot_extractor import TruckInfoExtractor
 
 DEBUG = True
@@ -153,7 +152,10 @@ if __name__ == "__main__":
             frame = cv2.imread(output_path)
 
         # Detect text in the frame
-        detected_text = detect_text(frame)  # This will return any text found in the frame
+        t1 = time.time()
+        detected_text = detect_text(output_path)  # This will return any text found in the frame
+        t2 = time.time()
+        print(f"Time taken to detect text: {t2 - t1} seconds")
         
         if detected_text:
             # Check if any detected text matches allowed numbers
