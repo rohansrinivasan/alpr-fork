@@ -176,3 +176,4 @@ debug/ocr/
 debug/
 
 *.DS_Store
+frozen_east_text_detection.pb
