@@ -1,19 +1,19 @@
 {
     "vehicles": [
         {
-            "color": "white",
-            "number": "3037",
-            "brand": "Volvo"
+            "company_name": "garrison_trucking",
+            "vehicle_num": "3037",
+            "vehicle_make": "Volvo"
         },
         {
-            "color": "red", 
-            "number": "1024",
-            "brand": "Peterbilt"
+            "company_name": "cromwell_trucking",
+            "vehicle_num": "1024",
+            "vehicle_make": "Mercedes"
         },
         {
-            "color": "blue",
-            "number": "4567", 
-            "brand": "Kenworth"
+            "company_name": "somerset_trucking",
+            "vehicle_num": "4567",
+            "vehicle_make": "Ashok Leyland"
         }
     ]
 }

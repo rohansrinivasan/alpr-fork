@@ -115,7 +115,7 @@ if __name__ == "__main__":
         exit(1)  # Note: using exit() instead of os.exit()
 
     allowed_vehicles = json.load(open("allowed_vehicles.json"))
-    allowed_numbers = [vehicle['number'] for vehicle in allowed_vehicles['vehicles']]
+    allowed_numbers = [vehicle['vehicle_num'] for vehicle in allowed_vehicles['vehicles']]
 
     print("\n\n")
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
