@@ -7,7 +7,6 @@ import threading
 import os
 import subprocess
 import numpy as np  # Add this import
-from collections import deque
 
 from color_detection import get_dominant_color
 from ocr.fast_ocr import detect_truck_number, detect_text
@@ -152,12 +151,9 @@ if __name__ == "__main__":
             frame = cv2.imread(output_path)
 
         # Detect text in the frame
-        t1 = time.time()
-        detected_text = detect_text(output_path)  # This will return any text found in the frame
-        t2 = time.time()
-        print(f"Time taken to detect text: {t2 - t1} seconds")
+        text_is_detected = detect_text(output_path)  # This will check if there is any text in the frame
         
-        if detected_text:
+        if text_is_detected:
             # Check if any detected text matches allowed numbers
             result = detect_truck_number(output_path, allowed_numbers)
             
