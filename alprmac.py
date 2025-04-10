@@ -11,14 +11,14 @@ import numpy as np
 import socket
 import struct
 # Jetson.GPIO commented out for Windows testing
-# import Jetson.GPIO as GPIO
+import Jetson.GPIO as GPIO
 
 from color_detection import get_dominant_color
 from ocr.fast_ocr import detect_truck_number, detect_text
 from ocr.usdot_extractor import TruckInfoExtractor
 
 # GPIO Setup (commented out for Windows)
-# GPIO_PIN = 50
+GPIO_PIN = 11
 
 # Camera Setup
 CAMERA_MAC = "28:18:FD:08:B2:DC"  # Replace with your camera's MAC address
@@ -27,15 +27,28 @@ MOTION_THRESHOLD = 1000
 PAUSE_AFTER_TOGGLE = 10  # Seconds to pause after gate opens
 
 # GPIO Functions (Modified for Windows)
+# def setup_gpio():
+#     print("GPIO setup simulated for Windows")
+
+# GPIO Functions
 def setup_gpio():
-    print("GPIO setup simulated for Windows")
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(GPIO_PIN, GPIO.OUT, initial=GPIO.LOW)
+
+# def toggle_gate(action="open"):
+#     print("Gate {}ing".format(action))
+#     time.sleep(0.1)
+#     print("Gate {} in progress...".format(action))
+#     time.sleep(0.5)
+#     print("Gate {} complete".format(action))
 
 def toggle_gate(action="open"):
     print("Gate {}ing".format(action))
-    time.sleep(0.1)
-    print("Gate {} in progress...".format(action))
-    time.sleep(0.5)
+    GPIO.output(GPIO_PIN, GPIO.HIGH)
+    time.sleep(1)
+    GPIO.output(GPIO_PIN, GPIO.LOW)
     print("Gate {} complete".format(action))
+
 
 # Camera IP Discovery
 def get_local_subnet():
